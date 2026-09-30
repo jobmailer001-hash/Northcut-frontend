@@ -3,7 +3,7 @@
 Vue 3 + Vite + PrimeVue + Tailwind. Storefront, account pages and the `/admin` panel in one app.
 
 ```sh
-cp .env.example .env    # VITE_API_URL — where the API runs
+cp .env.example .env    # VITE_API_URL=/api/v1; API_PROXY_TARGET — which API the dev proxy forwards to
 npm install
 npm run dev             # http://localhost:5173
 npm run build           # production build
@@ -11,6 +11,23 @@ npm run build           # production build
 
 Setup, how to try every flow, and a tour of how the code fits together: [`../README.md`](../README.md).
 Coding conventions: [`CLAUDE.md`](CLAUDE.md).
+
+## PrimeUI licence
+
+PrimeVue and `@primeicons/vue` are part of PrimeTek's **PrimeUI**, which needs a licence key. Without a
+valid key the app shows a licence banner and logs `[PrimeUI] …` in the console.
+
+- **Which licence:** the free **Community Licence** covers individuals and small organisations
+  (under $1M revenue, fewer than 5 developers and 10 employees, under $3M outside funding) —
+  <https://primeui.dev/licenses/community>. It's renewed yearly by re-confirming eligibility; larger
+  organisations need the paid Commercial Licence. Full terms: `node_modules/@primeicons/vue/LICENSE.md`.
+- **Where the key goes:** `VITE_PRIMEUI_LICENSE_KEY` — in `.env` locally, and in Vercel's Environment
+  Variables for the deployed site (then redeploy: it's baked in at build time). `main.js` passes it to
+  PrimeVue's `license` option.
+- **It's not a secret.** It's verified offline in the browser, so it ships in the built JavaScript by
+  design. It lives in env only so it can be renewed without a code change.
+- **Don't hide the banner instead** — the licence terms forbid removing or bypassing the licence
+  mechanism. When the key expires, renew it and update the variable.
 
 ## Deployment (Vercel frontend, Render API)
 
@@ -38,13 +55,18 @@ Browser ──► https://<app>.vercel.app/api/v1/...   (same domain as the page
    third-party cookies anyway. Through the proxy the cookie belongs to the Vercel domain and is
    always sent.
 2. **No CORS.** The page and the API share one origin, so the browser does no cross-origin checks.
-   (The API still has CORS set up for local development, where the two run on different ports.)
+
+Local development works the same way: `vite.config.js` has a dev-server proxy that forwards `/api/*`
+to `API_PROXY_TARGET` (your local API by default, or the Render URL to test against the deployed
+one), so cookies and CORS behave locally exactly as they do live. The rule and its reasoning are in
+[`CLAUDE.md`](CLAUDE.md) → "API base URL & proxy".
 
 ### What must be set
 
 | Where | Setting | Value |
 |---|---|---|
 | Vercel → Environment Variables | `VITE_API_URL` | `/api/v1` — relative, **no domain** |
+| Vercel → Environment Variables | `VITE_PRIMEUI_LICENSE_KEY` | your PrimeUI licence key (see [PrimeUI licence](#primeui-licence)) |
 | `vercel.json` | `/api/:path*` destination | the **API** service's Render URL (not the worker's) |
 | Render (API) | `CLIENT_URL` | this site's Vercel URL (used for email links and the payment return page) |
 
