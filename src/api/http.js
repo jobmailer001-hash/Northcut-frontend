@@ -19,11 +19,11 @@ const NO_REFRESH_PATHS = new Set([
 ])
 
 const http = axios.create({
-  // Always the same-origin path "/api/v1": requests go to the app's own domain and a proxy forwards
-  // them to the API — Vite's dev-server proxy locally, vercel.json when deployed. Never point this
-  // at the API's own domain: it would become cross-site, the SameSite=strict refresh cookie would
-  // stop being sent, and users would be logged out on every reload.
-  // See CLAUDE.md → "API base URL & proxy" and README → Deployment.
+  // Locally: the API directly (http://localhost:4000/api/v1).
+  // Deployed: the relative path "/api/v1". Requests then go to the frontend's own (Vercel) domain,
+  // and vercel.json forwards /api/* to the Render API server-side. Don't change this to the
+  // onrender.com URL: the API would become cross-site, the SameSite=strict refresh cookie would
+  // stop being sent, and users would be logged out on every reload. See README → Deployment.
   baseURL: import.meta.env.VITE_API_URL,
   // Sends the httpOnly refresh cookie on /auth requests.
   withCredentials: true,

@@ -68,11 +68,6 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(PrimeVue, {
-  // PrimeUI licence key (Community Licence — free for individuals and small teams — from
-  // https://primeui.dev/licenses/community). Verified offline at startup; without a valid key PrimeVue
-  // shows a licence banner. It ships in the browser bundle by design, so it's not a secret — it
-  // lives in env only so it can be renewed without a code change. See README → PrimeUI licence.
-  license: import.meta.env.VITE_PRIMEUI_LICENSE_KEY,
   theme: {
     preset: NorthcutPreset,
     options: {

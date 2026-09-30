@@ -43,18 +43,6 @@ import axios from 'axios'
 const { data } = await axios.get('http://localhost:4000/api/v1/orders')
 ```
 
-## API base URL & proxy
-**Rule: the app always calls the API through the same-origin path `/api/v1` — locally and deployed. `VITE_API_URL` is always `/api/v1`; never set it (or any request URL) to the API's own domain (`http://localhost:4000`, `https://…onrender.com`).** A proxy in front of the app forwards `/api/*` to the real API:
-- **Local development** — Vite's dev-server proxy (`server.proxy` in `vite.config.js`) forwards to `API_PROXY_TARGET` (local `.env`, defaults to `http://localhost:4000`; set it to the Render URL to test against the deployed API). `API_PROXY_TARGET` deliberately has no `VITE_` prefix: it's for the dev server only and must never reach browser code.
-- **Deployed** — `vercel.json` rewrites `/api/:path*` to the Render API.
-
-Why this is a rule, not a preference:
-1. **Sessions survive a reload.** The refresh token is an `httpOnly` cookie with `SameSite=strict` ("only send me back to the site that set me"). If the page called the API on a different domain, the request would be cross-site: the browser would never send the cookie back, the session couldn't be restored, and every reload would log the user out. Loosening the cookie to `SameSite=None` is not an acceptable fix — Safari and Chrome's tracking protections increasingly block such third-party cookies. Through the proxy the cookie is first-party and always sent.
-2. **No CORS.** Page and API share one origin, so there are no cross-origin checks to configure or debug.
-3. **Local matches production.** Developing through the same kind of proxy means cookie and CORS behaviour you see locally is exactly what users get — a problem shows up on your machine, not after deploying.
-
-`VITE_API_URL` is baked in at build time: after changing `.env`, restart `npm run dev`; after changing it on Vercel, redeploy. Deployment details and how to verify: `README.md` → Deployment.
-
 ## Auth & session
 - The access token lives **in memory only** in the auth store — never in `localStorage`, `sessionStorage` or a cookie. The refresh token is an `httpOnly` cookie the frontend never reads.
 - On app start (before the first navigation resolves), call `refreshRequest()` once to restore the session from the cookie; a failure just means "logged out".
