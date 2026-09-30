@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@300;400;500&display=swap');
+@import 'tailwindcss';
+@import 'tailwindcss-primeui';
+
+@theme {
+  --font-sans: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
+  /* Condensed heavy face, used only for the wordmark. */
+  --font-display: 'Anton', 'Arial Narrow', sans-serif;
+
+  /* Square corners everywhere, matching the PrimeVue preset. rounded-full is left alone. */
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
+}
+
+@layer base {
+  /* Brand secondary colour (the storefront footer). Admin site settings override these at startup
+     (utils/siteTheme.js); these are the defaults. */
+  :root {
+    --site-secondary: #0e0e0e;
+    --site-secondary-contrast: #ffffff;
+  }
+
+  body {
+    background-color: var(--p-surface-50);
+    color: var(--p-surface-950);
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+  }
+}
