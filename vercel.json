@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://REPLACE-WITH-YOUR-API.onrender.com/api/:path*"
+      "destination": "https://northcut-backend.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
