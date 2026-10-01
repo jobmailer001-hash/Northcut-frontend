@@ -1,0 +1,66 @@
+[33mcommit 94896befd97eca1fdca93f2bb9826f96437375cc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: megamindcodex <megamindcodex@gmail.com>
+Date:   Thu Oct 1 01:33:54 2026 +0100
+
+    Add Looks to the storefront and admin
+    
+    - Storefront: a Looks section on the landing page (latest 4 + See all),
+      a /looks list and /looks/:slug, showing the look's image, name, item
+      count and description, with each product linking to its own page.
+    - Admin: a Looks nav link with a new hat-and-glasses icon, a looks list
+      with search and visibility filter, and a look page with visibility,
+      details, image upload and a filterable product picker to add products.
+    - Hiding a product warns which looks were hidden along with it.
+    - Add components/icons/ with IconHatGlasses, and a reusable
+      PublicityToggle.
+
+[33mcommit ef167553409ae19b262512f8e82899c366f383d5[m
+Author: megamindcodex <megamindcodex@gmail.com>
+Date:   Wed Sep 30 21:38:46 2026 +0100
+
+    Restore the Vite dev proxy, PrimeUI licence key and docs
+    
+    Reverts 3813a69. Commit 65d7f74 was mislabelled with a backend message but held frontend work: the dev-server /api proxy (required by VITE_API_URL=/api/v1), the PrimeUI licence key option, the API base URL rule in CLAUDE.md, and README/.env.example docs.
+
+[33mcommit 3813a69af70031f1cc44369c7995153bebb6a21f[m
+Author: megamindcodex <megamindcodex@gmail.com>
+Date:   Wed Sep 30 21:11:10 2026 +0100
+
+    Revert "Upload images to the new Cloudinary folders"
+    
+    This reverts commit 65d7f7415e5b3ace12ea3f1c95ce80a6d92deca4.
+
+[33mcommit 65d7f7415e5b3ace12ea3f1c95ce80a6d92deca4[m
+Author: megamindcodex <megamindcodex@gmail.com>
+Date:   Wed Sep 30 21:08:26 2026 +0100
+
+    Upload images to the new Cloudinary folders
+    
+    Product images go to northcut/productsImages and hero images to
+    northcut/heroImages, matching the folders set up in the Cloudinary account.
+
+[33mcommit d25933f8d73bc6e897a15ed598ec22efd5f77a5a[m
+Author: megamindcodex <megamindcodex@gmail.com>
+Date:   Wed Sep 30 19:52:36 2026 +0100
+
+    Document the Vercel /api proxy and why it's needed
+    
+    Explain in the README (Deployment) and in api/http.js why the frontend calls
+    the API through vercel.json's /api/* proxy: it keeps the SameSite=strict
+    refresh cookie first-party (users stay logged in on reload) and removes CORS.
+
+[33mcommit 0ef10b56326275b11077abf1c2decc499ba4289e[m
+Author: megamindcodex <megamindcodex@gmail.com>
+Date:   Wed Sep 30 19:46:13 2026 +0100
+
+    Point Vercel /api proxy at the Render API
+    
+    Forward /api/* to https://northcut-backend.onrender.com so the browser only
+    talks to the Vercel domain: no CORS, and the refresh cookie stays
+    first-party, so users stay logged in across reloads.
+
+[33mcommit 756f32b5148ce574091eaf6f6ba7d323b8748f24[m
+Author: megamindcodex <megamindcodex@gmail.com>
+Date:   Wed Sep 30 07:24:30 2026 +0100
+
+    initial commit

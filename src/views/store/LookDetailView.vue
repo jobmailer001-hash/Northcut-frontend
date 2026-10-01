@@ -7,6 +7,7 @@ import Button from 'primevue/button'
 import Skeleton from 'primevue/skeleton'
 
 import BackLink from '@/components/shared/BackLink.vue'
+import ImagePreviewDialog from '@/components/shared/ImagePreviewDialog.vue'
 import LookProductList from '@/components/store/LookProductList.vue'
 import { ApiError } from '@/error/errors.js'
 import { handleApiError } from '@/error/handleApiError.js'
@@ -21,6 +22,7 @@ const { fetchLookRequest } = looksStore
 
 const isLoading = ref(true)
 const isNotFound = ref(false)
+const isPreviewVisible = ref(false)
 
 const loadLook = async (slug) => {
   isLoading.value = true
@@ -64,16 +66,22 @@ watch(() => route.params.slug, loadLook, { immediate: true })
     <BackLink :fallback="{ name: 'looks' }" />
 
     <div class="grid gap-10 md:grid-cols-2">
-      <div class="aspect-[4/5] overflow-hidden bg-surface-100">
+      <!-- Clicking the image shows it large in a dialog. -->
+      <button
+        v-if="look.imageUrl"
+        type="button"
+        class="aspect-[4/5] cursor-zoom-in overflow-hidden bg-surface-100"
+        :aria-label="`View ${look.name} larger`"
+        @click="isPreviewVisible = true"
+      >
         <img
-          v-if="look.imageUrl"
           :src="toOptimizedImageUrl(look.imageUrl, ImageWidths.DETAIL)"
           :alt="look.name"
           class="size-full object-cover"
         />
-        <div v-else class="flex size-full items-center justify-center">
-          <ImageIcon :size="48" color="var(--p-surface-400)" />
-        </div>
+      </button>
+      <div v-else class="flex aspect-[4/5] items-center justify-center bg-surface-100">
+        <ImageIcon :size="48" color="var(--p-surface-400)" />
       </div>
 
       <div class="flex flex-col gap-5">
@@ -94,5 +102,7 @@ watch(() => route.params.slug, loadLook, { immediate: true })
         </div>
       </div>
     </div>
+
+    <ImagePreviewDialog v-model:visible="isPreviewVisible" :src="look.imageUrl" :alt="look.name" />
   </section>
 </template>
