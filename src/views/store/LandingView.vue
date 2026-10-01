@@ -6,11 +6,14 @@ import { ArrowUpRight } from '@primeicons/vue'
 
 import LoadErrorMessage from '@/components/shared/LoadErrorMessage.vue'
 import ProductGrid from '@/components/store/ProductGrid.vue'
+import LookGrid from '@/components/store/LookGrid.vue'
 import { useProductsStore } from '@/stores/products.js'
 import { useSiteSettingsStore } from '@/stores/siteSettings.js'
+import { useLooksStore } from '@/stores/looks.js'
 import { ImageWidths, toOptimizedImageUrl } from '@/utils/image.js'
 
 const LATEST_PRODUCTS_COUNT = 8
+const LATEST_LOOKS_COUNT = 4
 // Left to right; the middle panel carries the headline.
 const HERO_PANELS = ['left', 'middle', 'right']
 
@@ -18,9 +21,14 @@ const productsStore = useProductsStore()
 const { products } = storeToRefs(productsStore)
 const { fetchProductsRequest } = productsStore
 const { settings } = storeToRefs(useSiteSettingsStore())
+const looksStore = useLooksStore()
+const { looks } = storeToRefs(looksStore)
+const { fetchLooksRequest } = looksStore
 
 const isLoading = ref(true)
 const loadError = ref('')
+const areLooksLoading = ref(true)
+const looksLoadError = ref('')
 
 // Hero images come from the site settings (set by an admin); an empty panel stays a grey plinth.
 const heroImages = computed(() =>
@@ -42,7 +50,27 @@ const loadLatestProducts = async () => {
   }
 }
 
-onMounted(loadLatestProducts)
+const loadLatestLooks = async () => {
+  areLooksLoading.value = true
+  looksLoadError.value = ''
+  try {
+    await fetchLooksRequest({ limit: LATEST_LOOKS_COUNT })
+  } catch (err) {
+    looksLoadError.value = err.message
+  } finally {
+    areLooksLoading.value = false
+  }
+}
+
+// With no public looks yet, the section is left out rather than shown empty.
+const isLooksSectionShown = computed(
+  () => areLooksLoading.value || Boolean(looksLoadError.value) || looks.value.length > 0,
+)
+
+onMounted(() => {
+  loadLatestProducts()
+  loadLatestLooks()
+})
 </script>
 
 <template>
@@ -108,6 +136,31 @@ onMounted(loadLatestProducts)
         :products="products"
         :is-loading="isLoading"
         :skeleton-count="LATEST_PRODUCTS_COUNT"
+      />
+    </section>
+
+    <section v-if="isLooksSectionShown" class="flex flex-col gap-8">
+      <div class="grid gap-6 md:grid-cols-2 md:items-end">
+        <div class="flex items-end justify-between gap-6 text-sm md:justify-start">
+          <h2>Looks</h2>
+          <RouterLink
+            :to="{ name: 'looks' }"
+            class="flex items-center gap-1.5 text-surface-500 hover:text-surface-950"
+          >
+            See all
+            <ArrowUpRight :size="12" />
+          </RouterLink>
+        </div>
+        <p class="max-w-xl text-2xl leading-tight font-light tracking-tight md:text-4xl">
+          Not sure what goes with what? Start from a look we've put together.
+        </p>
+      </div>
+      <LoadErrorMessage v-if="looksLoadError" :message="looksLoadError" @retry="loadLatestLooks" />
+      <LookGrid
+        v-else
+        :looks="looks"
+        :is-loading="areLooksLoading"
+        :skeleton-count="LATEST_LOOKS_COUNT"
       />
     </section>
   </div>

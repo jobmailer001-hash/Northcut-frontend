@@ -4,6 +4,7 @@ import { RouterLink, useRoute } from 'vue-router'
 import { Box, ChartBar, Cog, CreditCard, List, ShoppingBag, User, Users } from '@primeicons/vue'
 import Button from 'primevue/button'
 
+import { IconHatGlasses } from '@/components/icons/index.js'
 import { useAuthStore } from '@/stores/auth.js'
 
 // Rendered in the desktop sidebar and inside the mobile drawer. Logging out lives on the
@@ -16,6 +17,7 @@ const navLinks = [
   { name: 'admin-dashboard', label: 'Dashboard', section: 'admin-dashboard', icon: ChartBar },
   { name: 'admin-orders', label: 'Orders', section: 'admin-order', icon: ShoppingBag },
   { name: 'admin-products', label: 'Products', section: 'admin-product', icon: Box },
+  { name: 'admin-looks', label: 'Looks', section: 'admin-look', icon: IconHatGlasses },
   { name: 'admin-transactions', label: 'Transactions', section: 'admin-transaction', icon: CreditCard },
   { name: 'admin-customers', label: 'Customers', section: 'admin-customer', icon: Users },
   { name: 'admin-logs', label: 'Logs', section: 'admin-logs', icon: List },

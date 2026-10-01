@@ -23,6 +23,17 @@ const router = createRouter({
           name: 'product-detail',
           component: () => import('@/views/store/ProductDetailView.vue'),
         },
+        // Suggested outfits. Not in the header nav — reached from the landing page's Looks section.
+        {
+          path: 'looks',
+          name: 'looks',
+          component: () => import('@/views/store/LooksView.vue'),
+        },
+        {
+          path: 'looks/:slug',
+          name: 'look-detail',
+          component: () => import('@/views/store/LookDetailView.vue'),
+        },
         {
           path: 'profile',
           name: 'profile',
@@ -103,6 +114,23 @@ const router = createRouter({
           path: 'products/:slug',
           name: 'admin-product-detail',
           component: () => import('@/views/admin/ProductFormView.vue'),
+        },
+        // The storefront's looks list, shown inside the admin layout with admin controls.
+        {
+          path: 'looks',
+          name: 'admin-looks',
+          component: () => import('@/views/store/LooksView.vue'),
+        },
+        {
+          path: 'looks/new',
+          name: 'admin-look-new',
+          component: () => import('@/views/admin/LookFormView.vue'),
+        },
+        // The admin look page: status, details, image and products, each saved on its own.
+        {
+          path: 'looks/:slug',
+          name: 'admin-look-detail',
+          component: () => import('@/views/admin/LookFormView.vue'),
         },
         {
           path: 'orders',

@@ -26,9 +26,10 @@ export const useAdminProductsStore = defineStore('adminProducts', () => {
     return setProduct(data.data.product)
   }
 
+  // Hiding a product also hides every public look containing it; those come back as `hiddenLooks`.
   const updateProductRequest = async (productId, changes) => {
     const { data } = await http.patch(`/admin/products/${productId}`, changes)
-    return setProduct(data.data.product)
+    return { product: setProduct(data.data.product), hiddenLooks: data.data.hiddenLooks }
   }
 
   const adjustStockRequest = async (productId, { adjustment, reason }) => {

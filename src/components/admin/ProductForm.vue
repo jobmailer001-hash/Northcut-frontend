@@ -101,7 +101,7 @@ const handleSubmit = async () => {
   isSubmitting.value = true
   try {
     if (isEditing) {
-      const product = await updateProductRequest(props.product.id, buildPayload())
+      const { product } = await updateProductRequest(props.product.id, buildPayload())
       form.value = buildForm(product)
       successToast('Product saved.')
       emit('saved', product)

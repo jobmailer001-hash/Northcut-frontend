@@ -16,7 +16,7 @@ import { useProductRoutes } from '@/composables/useProductRoutes.js'
 import { PublicityStatuses } from '@/constants/product.js'
 import { handleApiError } from '@/error/handleApiError.js'
 import { useAdminProductsStore } from '@/stores/admin/products.js'
-import { successToast } from '@/utils/toastService.js'
+import { successToast, warningToast } from '@/utils/toastService.js'
 
 // Serves /admin/products/new (create) and /admin/products/:slug — the admin product page, where
 // a product is managed in separate sections: status, details, and images.
@@ -60,10 +60,13 @@ const loadProduct = async () => {
 const setPublicity = async (shouldBePublic) => {
   isSavingPublicity.value = true
   try {
-    await updateProductRequest(product.value.id, {
+    const { hiddenLooks } = await updateProductRequest(product.value.id, {
       publicityStatus: shouldBePublic ? PublicityStatuses.PUBLIC : PublicityStatuses.HIDDEN,
     })
     successToast(shouldBePublic ? 'Product is now public.' : 'Product is now hidden.')
+    if (hiddenLooks.length) {
+      warningToast(`Also hidden, since they include this product: ${hiddenLooks.map(({ name }) => name).join(', ')}.`)
+    }
   } catch (err) {
     handleApiError(err)
   } finally {
